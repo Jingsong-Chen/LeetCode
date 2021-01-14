@@ -1,0 +1,99 @@
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+# def listToNum(digits):
+#     """
+#     :type digits: ListNode
+#     :rtype: (int, int)
+#     """
+#     # terminal case
+#     if not digits:
+#         return 0, 0
+#     else:
+#         tail, place = listToNum(digits.next)
+#         val = digits.val * (10 ** place) + tail
+#         return val, (place + 1)
+    
+# def numToPylist(num):
+#     """
+#     :type num: int
+#     :rtype: list, head
+#     """
+#     if(num == 0):
+#         return list(), num * 10
+#     else:
+#         head_list, head_val = numToPylist(num//10)
+#         tail_digit = num - head_val
+#         head_list.append(tail_digit)
+#         return head_list, num * 10
+
+# def pylistToList(lst):
+#     """
+#     :type lst: list
+#     :rtype: ListNode
+#     """
+#     head = ListNode(lst[0])
+#     cur_node = head
+#     for num in lst[1:]:
+#         cur_node.next = ListNode(num)
+#         cur_node = cur_node.next
+#     return head
+#
+# class Solution(object):        
+#     def addTwoNumbers(self, l1, l2):
+#         """
+#         :type l1: ListNode
+#         :type l2: ListNode
+#         :rtype: ListNode
+#         """
+#         num1, _ = listToNum(l1)
+#         num2, _ = listToNum(l2)
+#         sum = num1 + num2
+#         if (sum == 0):
+#             sum_list = ListNode()
+#         else:
+#             sum_py_list, _ = numToPylist(sum)
+#             sum_list = pylistToList(sum_py_list)
+#         return sum_list
+class Solution(object):  
+    def addDigit(self, digit1, digit2, carry):
+        """
+        :type digit1: int
+        :type digit2: int
+        :type carry: int
+        :rtype: int, int
+        """
+        sum = digit1 + digit2 + carry
+        carry = sum // 10
+        sum = sum % 10
+        return sum, carry
+    
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        result = ListNode()
+        cur_digit = result
+        carry = 0
+        while (l1 or l2):
+            if l1:
+                if l2:
+                    sum, carry = self.addDigit(l1.val, l2.val, carry)
+                    l1 = l1.next
+                    l2 = l2.next
+                else:
+                    sum, carry = self.addDigit(l1.val, 0, carry)
+                    l1 = l1.next
+            else:
+                sum, carry = self.addDigit(0, l2.val, carry)
+                l2 = l2.next
+            cur_digit.next = ListNode(sum)
+            cur_digit = cur_digit.next
+        if carry:
+            cur_digit.next = ListNode(1)
+        result = result.next
+        return result
