@@ -1,0 +1,19 @@
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        result = [-1, -1]
+        complements = defaultdict()
+        for i, num in enumerate(nums):
+            # because we cannot use the same element twice, inquiry its complement first
+            if num in complements.keys():
+                result[0] = complements[num]
+                result[1] = i
+                break
+            # if the current number doesn't work, look for its complement
+            else:
+                complements[target - num] = i
+        return result
