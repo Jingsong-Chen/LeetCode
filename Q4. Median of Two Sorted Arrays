@@ -1,0 +1,92 @@
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        # sanity check - if either list is empty, return the median of the other list
+        if len(nums1) == 0:
+            return (nums2[(len(nums2) - 1) // 2] + nums2[len(nums2) // 2]) / 2.0
+        if len(nums2) == 0:
+            return (nums1[(len(nums1) - 1) // 2] + nums1[len(nums1) // 2]) / 2.0
+        
+        # both lists are non-empty now
+        # determine how many elements are in the lower half
+        left_half_len = (len(nums1) + len(nums2)) // 2
+        # determine at least how many elements in the lower half must come from list 1
+        min_left_from_1 = max(left_half_len - len(nums2), 0)
+        # determine at most how many elements in the lower half must come from list 1
+        max_left_from_1 = min(len(nums1), left_half_len)
+        
+        # binary search - find how many elements in the lower half are from list 1 
+        while min_left_from_1 != max_left_from_1:
+            # take the middle ground
+            left_from_1 = (min_left_from_1 + max_left_from_1) // 2
+            # determine at least how many elements in the lower half must come from list 2
+            left_from_2 = left_half_len - left_from_1
+            
+            # check if the value's found
+            # case 1: non of the lower half is from list 1
+            if left_from_1 == 0:
+                if nums2[left_from_2 - 1] < nums1[0]:
+                    break
+                else:
+                    min_left_from_1 = left_from_1 + 1
+            # case 2: some of the lower half are from list 1
+            else:
+                # non of the lower half is from list 2
+                if left_from_2 == 0:
+                    if nums1[left_from_1 - 1] < nums2[0]:
+                        break
+                    else:
+                        max_left_from_1 = left_from_1 - 1
+                        
+                # some of the lower half are from list 1 and some are from list 2
+                else:
+                    # if all of list 1 is in the lower half
+                    if left_from_1 == len(nums1):
+                        condition1 = True
+                        right_min1 = nums2[left_from_2]
+                    else:
+                        condition1 = nums2[left_from_2 - 1] <= nums1[left_from_1]
+                        right_min1 = nums1[left_from_1]
+                    # if all of list 1 is in the lower half
+                    if left_from_2 == len(nums2):
+                        condition2 = True
+                        right_min2 = nums1[left_from_1]
+                    else:
+                        condition2 = nums1[left_from_1 - 1] <= nums2[left_from_2]
+                        right_min2 = nums2[left_from_2]
+                        
+                    # update the bounds
+                    if condition1:
+                        if condition2:
+                            break
+                        else:
+                            max_left_from_1 = left_from_1 - 1
+                    else:
+                        min_left_from_1 = left_from_1 + 1
+        left_from_1 = (min_left_from_1 + max_left_from_1) // 2
+        left_from_2 = left_half_len - left_from_1
+
+        # calculate the median
+        if left_from_1:
+            left_max1 = nums1[left_from_1 - 1]
+        else:
+            left_max1 = nums2[left_from_2 - 1]
+        if left_from_2:
+            left_max2 = nums2[left_from_2 - 1]
+        else:
+            left_max2 = nums1[left_from_1 - 1]
+        left_max = max(left_max1, left_max2)
+        
+        if left_from_1 == len(nums1):
+            right_min1 = nums2[left_from_2]
+        else:
+            right_min1 = nums1[left_from_1]
+        if left_from_2 == len(nums2):
+            right_min2 = nums1[left_from_1]
+        else:
+            right_min2 = nums2[left_from_2]
+        right_min = min(right_min1, right_min2)
+
+        if (len(nums1) + len(nums2)) % 2:
+            return float(right_min)
+        else:
+            return (left_max + right_min) / 2.0
