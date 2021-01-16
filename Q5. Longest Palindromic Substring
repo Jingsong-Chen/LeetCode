@@ -1,0 +1,23 @@
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if len(s) == 0:
+            return ''
+        max_len = 1
+        palindrome = s[0]
+        expanded = ''
+        for char in s:
+            expanded = expanded + '#' + char
+        expanded += '#'
+        i = 0
+        while i < len(expanded):
+            offset = 1
+            while (i - offset >= 0) and (i + offset < len(expanded)):
+                if expanded[i - offset] != expanded[i + offset]:
+                    break
+                offset += 1
+            offset -= 1
+            if (1 + (2 * offset)) > max_len:
+                max_len = 1 + (2 * offset)
+                palindrome = expanded[i - offset : i + offset + 1]
+            i += 1
+        return palindrome.replace('#','')
