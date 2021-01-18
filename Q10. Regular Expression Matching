@@ -1,0 +1,33 @@
+class Solution(object):
+    def isMatch(self, text, pattern):
+        text = '#' + text
+        pattern = '#' + pattern
+        
+        dp = {}
+        dp[(0,0)] = True
+        dp[(0,1)] = False
+        for i in range(1,len(text)):
+            dp[(i,0)] = False
+        if len(pattern) > 2:
+            for j in range(2,len(pattern)):
+                dp[(0,j)] = (pattern[j] == '*') and dp[(0,j-2)]
+        
+        for i in range(1, len(text)):
+            for j in range(1, len(pattern)):
+                # the current pattern character is an English character
+                if pattern[j].isalpha():
+                    dp[(i,j)] = (text[i] == pattern[j]) and dp[(i-1,j-1)]
+                # the current pattern character is wild card '.' 
+                elif pattern[j] == '.':
+                    dp[(i,j)] = dp[(i-1,j-1)]
+                # the current pattern character is any quantifier '*'
+                else:
+                    # if '*' eats the previous char: dp[(i,j-2)]
+                    # if '*' means repeating the previous char
+                    if j - 2 < 0:
+                        dp[(i,j)] = (text[i] == pattern[j-1] or pattern[j-1] == '.') and dp[(i-1,j)]
+                    else:
+                        dp[(i,j)] = dp[(i,j-2)] or ((text[i] == pattern[j-1] or pattern[j-1] == '.') and dp[(i-1,j)])
+        return dp[(len(text)-1,len(pattern)-1)]
+                    
+                
