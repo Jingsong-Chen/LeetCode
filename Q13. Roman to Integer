@@ -1,0 +1,36 @@
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        one = {'M':1000, 'D':500, 'C':100, 'L':50, 'X':10, 'V':5, 'I':1}
+        
+        # if len(s) < 2:
+        #     return one[s]
+        # two = {'CM':900, 'CD':400, 'XC':90, 'XL':40, 'IX':9, 'IV':4}
+        # result = 0
+        # i = 0
+        # repeat = 1
+        # while i < len(s)-1:
+        #     if s[i] == s[i+1]:
+        #         repeat += 1
+        #     else:
+        #         twoDigits = s[i] + s[i+1]
+        #         if twoDigits in two:
+        #             result += two[twoDigits]
+        #             i += 1
+        #         else:
+        #             result += repeat * one[s[i]]
+        #         repeat = 1
+        #     i += 1
+        # if i == len(s)-1:
+        #     result += repeat * one[s[i]]
+        # return result
+        
+        result = 0 
+        result += one[s[0]]
+        i = 1
+        while i < len(s):
+            if one[s[i-1]] < one[s[i]]:
+                result = result + one[s[i]] - 2 * one[s[i-1]]
+            else:
+                result += one[s[i]]
+            i += 1
+        return result
