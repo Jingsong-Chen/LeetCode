@@ -1,0 +1,35 @@
+import math
+class Solution:
+    def twoSumClosest(self, nums, target):
+        i = 0
+        j = len(nums) - 1
+        min_difference = math.inf
+        while i < j:
+            difference = nums[i] + nums[j] - target
+            if abs(difference) < abs(min_difference):
+                min_difference = difference
+            if difference > 0:
+                j -= 1
+            elif difference == 0:
+                return target
+            else:
+                i += 1
+        return target + min_difference
+    
+    
+    def kSumClosest(self, nums, target, k):
+        if k == 2:
+            return self.twoSumClosest(nums, target)
+        i = 0
+        closest = math.inf
+        while i <= len(nums)-k:
+            cur_closest = nums[i] + self.kSumClosest(nums[i+1:], target - nums[i], k - 1)
+            if abs(cur_closest - target) < abs(closest - target):
+                closest = cur_closest
+            i += 1
+        return closest
+    
+            
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        return self.kSumClosest(nums, target, 3)
