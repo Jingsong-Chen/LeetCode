@@ -1,0 +1,28 @@
+class Solution:
+    # runtime: O(n)
+    def twoSum(self, nums, target):
+        tuples = set()
+        complements = {}
+        for num in nums:
+            if num in complements:
+                tuples.add((num, complements[num]))
+            else:
+                complements[target-num] = num
+        return [list(t) for t in tuples]
+
+    def threeSum(self, nums):
+        if len(nums) < 3:
+            return []
+        triplets = []
+        nums = sorted(nums)
+        i = 0
+        while i < len(nums) - 2:
+            if i > 0 and nums[i] == nums[i-1]:
+                i += 1
+                continue
+            tuples = self.twoSum(nums[i+1:], 0 - nums[i])
+            for t in tuples:
+                triplet = list(t) + [nums[i]]
+                triplets.append(triplet)
+            i += 1
+        return triplets
