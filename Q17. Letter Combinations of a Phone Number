@@ -1,0 +1,20 @@
+class Solution:
+    charMap = {'2':['a','b','c'],
+               '3':['d','e','f'],
+               '4':['g','h','i'],
+               '5':['j','k','l'],
+               '6':['m','n','o'],
+               '7':['p','q','r','s'],
+               '8':['t','u','v'],
+               '9':['w','x','y','z']}
+    
+    def letterCombinations(self, digits: str) -> List[str]:
+        if not len(digits):
+            return []
+        if len(digits) == 1:
+            return self.charMap[digits]
+        subcombinations = self.letterCombinations(digits[1:])
+        combinations = []
+        for char in self.charMap[digits[0]]:
+            combinations += [char + subcombination for subcombination in subcombinations]
+        return combinations
