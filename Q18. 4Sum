@@ -1,0 +1,33 @@
+class Solution:
+    # runtime: O(n)
+    def twoSum(self, nums, target):
+        tuples = set()
+        complements = {}
+        for num in nums:
+            if num in complements:
+                tuples.add((num, complements[num]))
+            else:
+                complements[target-num] = num
+        return [list(t) for t in tuples]
+    
+    def kSum(self, nums, k, target):
+        if len(nums) < k:
+            return []
+        nums = sorted(nums)
+        if k == 2:
+            return self.twoSum(nums, target)
+        else:
+            i = 0
+            kplets = []
+            while i <= (len(nums) - k):
+                if i > 0 and nums[i] == nums[i-1]:
+                    i += 1
+                    continue
+                for kplet in self.kSum(nums[i+1:], k - 1, target - nums[i]):
+                    kplets.append(kplet + [nums[i]])
+                i += 1
+            return kplets
+        
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        return self.kSum(nums, 4, target)
+        
