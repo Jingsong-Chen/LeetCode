@@ -1,0 +1,37 @@
+import math
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]):
+        if len(lists) == 0:
+            return None
+        dummy = ListNode()
+        lastSortedNode = dummy
+        k = 1
+        while any(lists):
+            argMin = [] # argMin is guaranteed to be non-empty after the while loop
+            minVal = math.inf
+            # iterate through each list head to find the min value
+            i = 0
+            while i < len(lists):
+                if not lists[i]:
+                    i += 1
+                    continue
+                if lists[i].val < minVal:
+                    argMin = [i]
+                    minVal = lists[i].val
+                elif lists[i].val == minVal:
+                    argMin.append(i)
+                i += 1
+            # advance the pointer in the list
+            # merge the minimum nodes found
+            # argMin is guaranteed to non-empty
+            for index in argMin:
+                lists[index] = lists[index].next
+                lastSortedNode.next = ListNode(val=minVal)
+                lastSortedNode = lastSortedNode.next
+            # print('iteration',k,'argmin',argMin)
+        return dummy.next
