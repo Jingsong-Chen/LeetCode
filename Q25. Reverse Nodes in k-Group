@@ -1,0 +1,71 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, start, end):
+        if start == end:
+            return start
+        nxt = self.reverseList(start.next, end)
+        nxt.next = start
+        return start
+        
+    def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
+        dummy_head = ListNode(head)
+        pre = dummy_head
+        start = head
+        while start:
+            # find the start and the end of the current k-group
+            i = 1
+            end = start
+            while i < k and end:
+                end = end.next
+                i += 1
+            # reverse inside a valid k-group
+            if end:
+                post = end.next
+                self.reverseList(start, end)
+                # connect the reversed k-group with the rest list
+                start.next = post
+                # print('end next', end.next)
+                pre.next = end
+                # move on pass the k-group
+                pre = start
+                start = post
+            # if don't have enough elements for a k-group, stop reversing
+            else:
+                break
+        return dummy_head.next
+
+# class Solution(object):
+#     def reverseKGroup(self, head, K):
+#         """
+#         :type head: ListNode
+#         :rtype: ListNode
+#         """
+#         splits = [ListNode(-1) for _ in range(K)]
+#         tails = [splits[i] for i in range(K)]
+        
+#         k = 0
+#         while head:
+#             temp = head.next
+#             tails[k % K].next = head
+#             tails[k % K] = head
+#             head.next = None
+#             head = temp
+#             k = k + 1
+
+#         start, tails = ListNode(-1), [splits[i].next for i in range(K)]
+#         result = start
+#         while k > 0:
+#             (s, e, inc) = (len(tails)-1,-1,-1) if tails[-1] else (0, len(tails), 1)
+#             for i in range(s, e, inc):
+#                 if tails[i] != None:
+#                     temp = tails[i].next
+#                     result.next = tails[i]
+#                     result = tails[i]
+#                     tails[i].next = None
+#                     tails[i] = temp
+#                     k -= 1
+#         return start.next
