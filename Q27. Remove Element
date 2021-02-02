@@ -1,0 +1,26 @@
+class Solution(object):
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        index = 0
+        num_popped = 0
+        # examine all the elements, linearly
+        while (index + num_popped) < len(nums):            
+            # fetch the next number in the array
+            nums[index] = nums[index + num_popped]
+            # keep popping the target values
+            while True:
+                # if the next element is the target number, pop it
+                if nums[index] == val:
+                    num_popped += 1
+                    if (index + num_popped) < len(nums):
+                        nums[index] = nums[index + num_popped]
+                    else:
+                        break
+                else:
+                    break
+            index += 1
+        return (len(nums) - num_popped)
