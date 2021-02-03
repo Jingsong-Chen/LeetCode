@@ -1,0 +1,29 @@
+class Solution:
+    def divide(self, dividend: int, divisor: int) -> int:
+        if dividend == 0:
+            return 0
+        negate = False
+        if (dividend < 0 and divisor > 0) or (dividend > 0 and divisor < 0):
+            negate = True
+        dividend = abs(dividend)
+        divisor = abs(divisor)
+        
+        # Initialize 
+        # the quotient 
+        quotient = 0; 
+        temp = 0; 
+
+        # test down from the highest  
+        # bit and accumulate the  
+        # tentative value for valid bit 
+        for i in range(31, -1, -1): 
+            if (temp + (divisor << i) <= dividend): 
+                temp += divisor << i; 
+                quotient += 1 << i; 
+        if negate:
+            quotient =  0 - quotient
+        if quotient < -2147483648:
+            return -2147483648
+        if quotient > 2147483647:
+            return 2147483647
+        return quotient
