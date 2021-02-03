@@ -1,0 +1,56 @@
+from collections import defaultdict
+
+class Solution:
+    def findSubstring(self, s: str, words: List[str]) -> List[int]:
+        if not len(words):
+            return []
+        word_count = defaultdict(lambda: 0)
+        for word in words:
+            word_count[word] += 1
+        result = []
+        start = 0
+        num_of_words = len(words)
+        word_size = len(words[0])
+        window_size = num_of_words * word_size
+        
+        while start + window_size <= len(s):
+            window_word_count = defaultdict(lambda: 0)
+            for i in range(num_of_words):
+                word = s[start + i * word_size : start + (i + 1) * word_size]
+                if word in word_count:
+                    window_word_count[word] += 1
+                else:
+                    break
+            add = True
+            for word in word_count.keys():
+                if window_word_count[word] != word_count[word]:
+                    add = False
+                    break
+            if add:
+                result.append(start)
+            start += 1
+        return result
+        
+#         def helper(s):
+#             nonlocal words
+#             if not len(words):
+#                 return []
+#             if len(words) == 1:
+#                 print('return')
+#                 # print('return', [match.start() for match in re.finditer(next(iter(words)), s)])
+#                 return [match.start() for match in re.finditer(next(iter(words)), s)]
+#             answer = []
+#             word_list = list(words)
+#             for word in word_list:
+#                 words.remove(word)
+#                 print('matching', word)
+#                 for match in re.finditer(word, s):
+#                     print('matched at', match.start())
+#                     for start in helper(s[match.end():]):
+#                         if start == 0:
+#                             answer.append(match.start())
+#                 words.add(word)
+#             return answer
+        
+#         return helper(s)
+            
