@@ -1,0 +1,59 @@
+class Solution:
+#     def extreme_insertion_index(self, nums, target, left):
+#         lo = 0
+#         hi = len(nums)
+
+#         while lo < hi:
+#             mid = (lo + hi) // 2
+#             if nums[mid] > target or (left and target == nums[mid]):
+#                 hi = mid
+#             else:
+#                 lo = mid+1
+
+#         return lo
+    
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        # # linear time:
+        # results = [-1, -1]
+        # i = 0
+        # while i < len(nums):
+        #     if nums[i] == target:
+        #         results = [i, i]
+        #         break
+        #     i += 1
+        # while i < len(nums):
+        #     if nums[i] == target:
+        #         results[1] = i
+        #     i += 1
+        # return results
+        
+        # log time
+        def binarySearch(start, end):
+            if start > end:
+                return -1, -1
+            med = (start + end) // 2
+            if nums[med] > target:
+                return binarySearch(start, med - 1)
+            elif nums[med] == target:
+                results = [med, med]
+                pre_index = binarySearch(start, med - 1)[0]
+                post_index = binarySearch(med + 1, end)[1]
+                if pre_index == -1:
+                    pre_index = med
+                if post_index == -1:
+                    post_index = med
+                return pre_index, post_index
+            else:
+                return binarySearch(med + 1, end)
+            
+        return list(binarySearch(0, len(nums) - 1))
+
+#         # answer
+#         left_idx = self.extreme_insertion_index(nums, target, True)
+
+#         # assert that `left_idx` is within the array bounds and that `target`
+#         # is actually in `nums`.
+#         if left_idx == len(nums) or nums[left_idx] != target:
+#             return [-1, -1]
+
+        return [left_idx, self.extreme_insertion_index(nums, target, False)-1]
