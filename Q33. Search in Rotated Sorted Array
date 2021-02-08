@@ -1,0 +1,36 @@
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        def condition1(index):
+            if index < len(nums) - 1 and nums[index] > nums[index+1]:
+                return 0
+            if nums[0] <= nums[index]:
+                return 1
+            return -1
+            
+        def condition2(index):
+            if nums[index] > target:
+                return -1
+            if nums[index] == target:
+                return 0
+            else:
+                return 1
+            
+        def binarySearch(condition, start, end):
+            left = start
+            right = end
+            while left <= right:
+                middle = (left + right) // 2
+                direction = condition(middle)
+                if direction < 0:
+                    right = middle - 1
+                elif direction == 0:
+                    return middle
+                else:
+                    left = middle + 1
+            return -1
+            
+        turning_point = max(0, binarySearch(condition1, 0, len(nums) - 1))
+        i = binarySearch(condition2, 0, turning_point)
+        if i < 0:
+            i = binarySearch(condition2, turning_point + 1, len(nums) - 1)
+        return i
